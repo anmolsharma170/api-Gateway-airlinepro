@@ -49,9 +49,26 @@ async function isAdmin(req,res,next){
     }
 }
 
+async function isAdminOrFlightCompany(req, res, next) {
+    try {
+        const response = await UserService.isAdminOrFlightCompany(req.user);
+        if(!response){
+            return res
+                    .status(StatusCodes.UNAUTHORIZED)
+                    .json({message: 'User is not authorized for this action. Admin or Flight Company role required.'});
+        }
+        next();
+    } catch (error) {
+        return res
+                .status(error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR)
+                .json(error);
+    }
+}
+
 // we will use isadmin as a middleware in order to give roles
 module.exports = {
     validateAuthRequest,
     checkAuth,
-    isAdmin
+    isAdmin,
+    isAdminOrFlightCompany
 } 

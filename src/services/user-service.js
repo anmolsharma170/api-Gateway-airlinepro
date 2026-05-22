@@ -107,10 +107,35 @@ async function isAdmin(id){
         throw new AppError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }
+
+async function isAdminOrFlightCompany(id){
+    try {
+        const user = await userRepo.get(id);
+        if(!user){
+            throw new AppError('No user found for given id', StatusCodes.NOT_FOUND);
+        }
+        const adminRole = await roleRepo.getRoleByName(Enums.USER_ROLES_ENUMS.ADMIN);
+        const flightCompanyRole = await roleRepo.getRoleByName(Enums.USER_ROLES_ENUMS.FLIGHT_COMPANY);
+        
+        if(!adminRole || !flightCompanyRole){
+            throw new AppError('Roles not found', StatusCodes.NOT_FOUND);
+        }
+        
+        const hasAdminRole = await user.hasRole(adminRole);
+        const hasFlightCompanyRole = await user.hasRole(flightCompanyRole);
+        
+        return hasAdminRole || hasFlightCompanyRole;
+    } catch (error) {
+        if(error instanceof AppError) throw error;
+        throw new AppError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
 module.exports={
     create,
     signin,
     isAuthenticated,
     addRoletoUser,
-    isAdmin
+    isAdmin,
+    isAdminOrFlightCompany
 }
