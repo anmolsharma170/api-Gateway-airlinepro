@@ -8,7 +8,7 @@ const serverConfig = require('./config/server-config');
 
 const limiter = rateLimit({
     windowMs: 2*60*1000,    // in every 2min window we can send max 3 req
-    max:3
+    max:30
 })
 
 app.use(limiter); //rate limiter limits each IP address
