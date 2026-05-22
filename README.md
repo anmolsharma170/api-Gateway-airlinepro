@@ -1,8 +1,34 @@
-# Airline API Gateway
+# Airline API Gateway & Authentication Service
 
-This is an API Gateway for the Airline backend microservices system. It handles authentication, routing, and user management.
+This is the central API Gateway for the Airline backend microservices system. It handles core cross-cutting concerns including secure authentication, authorization (RBAC), intelligent request routing, and rate-limiting.
 
-## Project Structure
+## 🚀 Engineering Problems Solved
+
+This project successfully addresses several crucial distributed systems challenges, making it highly robust and production-ready.
+
+### 1. Centralized Microservices Routing (API Gateway Pattern)
+* **Challenge:** Clients securely accessing and communicating with multiple decentralized microservices without exposing internal network topology.
+* **Solution:** Implemented a robust **API Gateway** acting as a single entry point using `http-proxy-middleware`. It effectively abstracts the internal service architecture, orchestrates upstream proxying, reduces client-side complexity, and unifies cross-origin handling.
+
+### 2. Distributed Authentication & Role-Based Access Control (RBAC)
+* **Challenge:** Duplicating authentication logic across microservices leads to security vulnerabilities and code redundancy.
+* **Solution:** Extracted identity management directly into the gateway. Engineered a secure **JWT-based authentication** flow with `bcrypt` password hashing. Designed a complete **Role-Based Access Control (RBAC)** system via custom middlewares, ensuring that unauthorized or under-privileged requests are intercepted and terminated before reaching downstream microservices.
+
+### 3. API Security & Traffic Control (Rate Limiting)
+* **Challenge:** Protecting public-facing APIs from brute-force attempts, DDoS attacks, and API abuse.
+* **Solution:** Configured and integrated `express-rate-limit` to establish strict traffic policies and IP-based throttling. This highly reduces the risk of volumetric attacks and ensures the resilience and high availability of backend services.
+
+### 4. Maintainability via Clean Layered Architecture
+* **Challenge:** High coupling between database logic, business rules, and API transport layers.
+* **Solution:** Architected a structurally sound, modular application separating concerns into distinct layers: **Controllers, Services, and Repositories**. This guarantees persistence ignorance in the business layer, achieving a highly testable, cohesive, and easily scalable codebase.
+
+### 5. Deterministic Database Schema Versioning
+* **Challenge:** Reliably tracking database state changes and safely propagating schema migrations across multiple operational environments.
+* **Solution:** Integrated **Sequelize ORM** alongside a robust migration and seeder pipeline. This provides reliable database version control, ACID-compliant transactions, and a reproducible database state for robust CI/CD deployments.
+
+---
+
+## 🏗️ Project Structure
 
 src -> Inside the src folder all the actual source code regarding the project will reside.
 
