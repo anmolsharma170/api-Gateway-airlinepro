@@ -38,7 +38,20 @@ async function signin(data){
             throw new AppError('Invalid password',StatusCodes.BAD_REQUEST);
         }
         const jwt = Auth.createToken({id: user.id, email:user.email});
-        return jwt;
+        
+        // --- CUSTOM CHANGE: FETCH USER ROLES ON SIGNIN ---
+        // We fetch the associated roles for the authenticated user and return them 
+        // alongside the token. This allows the React client to immediately read and 
+        // enforce roles in the UI (e.g. showing the Admin Console link).
+        const roles = await user.getRole();
+        return {
+            token: jwt,
+            user: {
+                id: user.id,
+                email: user.email,
+                roles: roles.map(r => ({ name: r.name }))
+            }
+        };
     } catch (error) {
         console.log(error);
         if(error instanceof AppError) throw error;
